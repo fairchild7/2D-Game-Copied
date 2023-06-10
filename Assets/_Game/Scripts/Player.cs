@@ -1,11 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Animator anim;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float speed = 250;
     [SerializeField] private float jumpForce = 400;
@@ -13,20 +13,28 @@ public class Player : MonoBehaviour
     private bool isGrounded = true;
     private bool isJumping = false;
     private bool isAttack = false;
+    private bool isDeath = false;
 
     private float horizontal;
 
-    private string currentAnimName;
-
     private int coin = 0;
+
+    private Vector3 savePoint;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        SavePoint();
+        OnInit();
     }
 
     void Update()
     {
+        if (isDeath)
+        {
+            return;
+        }
+
         isGrounded = CheckGrounded();
 
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -92,6 +100,14 @@ public class Player : MonoBehaviour
         
     }
 
+    public void OnInit()
+    {
+        isDeath = false;
+        isAttack = false;
+        transform.position = savePoint;
+        ChangeAnim("idle");
+    }
+
     private bool CheckGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.1f, groundLayer);
@@ -126,16 +142,6 @@ public class Player : MonoBehaviour
         rb.AddForce(jumpForce * Vector2.up);
     }
 
-    private void ChangeAnim(string animName)
-    {
-        if (currentAnimName != animName)
-        {
-            anim.ResetTrigger(animName);
-            currentAnimName = animName;
-            anim.SetTrigger(currentAnimName);
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Coin")
@@ -145,7 +151,15 @@ public class Player : MonoBehaviour
         }
         if (collision.tag == "DeathZone")
         {
+            isDeath = true;
             ChangeAnim("die");
+
+            Invoke(nameof(OnInit), 1f);
         }
+    }
+
+    internal void SavePoint()
+    {
+        savePoint = transform.position;
     }
 }
