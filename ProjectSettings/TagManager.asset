@@ -6,7 +6,9 @@ TagManager:
   tags:
   - Coin
   - DeathZone
-  - FootTag
+  - EnemyWall
+  - Enemy
+  - HiddenMap
   layers:
   - Default
   - TransparentFX
@@ -14,9 +16,9 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - HiddenMap
   - 
   - 
   - 

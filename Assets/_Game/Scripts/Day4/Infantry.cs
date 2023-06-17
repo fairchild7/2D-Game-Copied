@@ -133,4 +133,35 @@ public class Infantry : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(EnumMoveAroundTwoPoints());
     }
+
+    public void MoveRandom()
+    {
+        isMoving = true;
+        currentIndex = 0;
+        StopAllCoroutines();
+        StartCoroutine(EnumMoveRandom());
+    }
+
+    private IEnumerator EnumMoveRandom()
+    {
+        while (isMoving)
+        {
+            Vector3 targetPosition = moveArray[currentIndex];
+
+            while (transform.position != targetPosition)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+            
+            int nextIndex = Random.Range(0, 3);
+            Debug.Log(currentIndex);
+            while (nextIndex == currentIndex)
+            {
+                nextIndex = Random.Range(0, 3);
+            }
+            currentIndex = nextIndex;
+            yield return null;
+        }
+    }
 }

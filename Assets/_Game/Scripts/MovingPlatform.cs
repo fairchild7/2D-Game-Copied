@@ -35,7 +35,10 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.transform.SetParent(transform);
+            if (collision.contacts[0].normal.y < 0)
+            {
+                collision.gameObject.transform.SetParent(transform);
+            }
         }
     }
 
@@ -43,7 +46,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.transform.SetParent(null);
+            collision.gameObject.transform.SetParent(null);
         }
     }
 }
